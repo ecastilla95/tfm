@@ -12,5 +12,9 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "2.4.0",
   "org.apache.spark" %% "spark-mllib" % "2.4.0",
   "net.sourceforge.htmlunit" % "htmlunit" % "2.34.1",
-  "com.typesafe" % "config" % "1.3.4"
+  "de.julielab" % "aliasi-lingpipe" % "4.1.0",
+  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
+  "com.typesafe" % "config" % "1.3.4",
+  "io.indico" % "indico" % "3.1.0",
+  "com.ibm.watson" % "language-translator" % "7.1.1"
 )
