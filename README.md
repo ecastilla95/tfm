@@ -1,3 +1,1 @@
-     Scala 2.12.8
-     SBT 1.2.8
-     ScalaTest 3.0.5
+Sentiment analysis of Spanish economic news and their influence on the Ibex35 index.
