@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   "org.scalatest"   %% "scalatest"    % "3.0.5"   % "test",
   "org.scalacheck" %% "scalacheck" % "1.14.0" % "test",
   "org.apache.spark" %% "spark-core" % "2.4.0",
+  "org.apache.spark" %% "spark-mllib" % "2.4.0",
   "net.sourceforge.htmlunit" % "htmlunit" % "2.34.1",
   "com.typesafe" % "config" % "1.3.4"
 )
