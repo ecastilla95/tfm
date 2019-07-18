@@ -81,13 +81,13 @@ object Charter extends App {
       $"_2.avg(change)".as("change")
     )
 
-  val dfList: Seq[(DataFrame, String)] = Seq(
-    (weeklyDisplacedDf, "weekly_displaced"),
-    (elmundoWeeklyDf, "elmundo_weekly"),
-    (elmundoWeeklyDisplacedDf, "elmundo_weekly_displaced"),
-    (elpaisWeeklyDf, "elpais_weekly"),
-    (elpaisWeeklyDisplacedDf, "elpais_weekly_displaced"),
-    (expansionWeeklyDisplacedDf, "expansion_weekly_displaced")
+  val dfList: Map[String, DataFrame] = Map(
+    "weekly_displaced" -> weeklyDisplacedDf,
+    "elmundo_weekly" -> elmundoWeeklyDf,
+    "elmundo_weekly_displaced" -> elmundoWeeklyDisplacedDf,
+    "elpais_weekly" -> elpaisWeeklyDf,
+    "elpais_weekly_displaced" -> elpaisWeeklyDisplacedDf,
+    "expansion_weekly_displaced" -> expansionWeeklyDisplacedDf
   )
 
   // This method formats a dataframe as an array of strings equivalent to a CSV with header
@@ -98,6 +98,6 @@ object Charter extends App {
   }
 
   // We write the studied files
-  dfList.foreach(e => FileUtils.writeFile(ProcessConstants.DATA_FOLDER + "charts/", e._2 + ".csv", collectDf(e._1)))
+  dfList.foreach(e => FileUtils.writeFile(ProcessConstants.DATA_FOLDER + "charts/", e._1 + ".csv", collectDf(e._2)))
 
 }
