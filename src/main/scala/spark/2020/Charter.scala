@@ -98,6 +98,6 @@ object Charter extends App {
   }
 
   // We write the studied files
-  dfList.foreach(e => FileUtils.writeFile(ProcessConstants.DATA_FOLDER + "charts/", e._1 + ".csv", collectDf(e._2)))
+  dfList.foreach(e => FileUtils.writeFile(ProcessConstants.DATA_FOLDER + "charts/2020/", e._1 + ".csv", collectDf(e._2)))
 
 }
