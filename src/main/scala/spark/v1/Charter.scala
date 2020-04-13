@@ -1,9 +1,10 @@
-package spark
+package spark.v1
 
 import commons.{FileUtils, ProcessConstants, TimeUtils}
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DoubleType, StringType, StructType}
+import spark.SparkUtils
 
 /**
   * This object creates small CSV files for later graphing
@@ -98,6 +99,6 @@ object Charter extends App {
   }
 
   // We write the studied files
-  dfList.foreach(e => FileUtils.writeFile(ProcessConstants.DATA_FOLDER + "charts/2020/", e._1 + ".csv", collectDf(e._2)))
+  dfList.foreach(e => FileUtils.writeFile(ProcessConstants.DATA_FOLDER + "charts/2019", e._1 + ".csv", collectDf(e._2)))
 
 }

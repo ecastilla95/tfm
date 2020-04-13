@@ -8,4 +8,7 @@ object ProcessConstants {
   // Name and location of the Ibex35 historical data file
   val IBEX35_HISTORICAL_FILE: String = DATA_FOLDER + ProcessInfo.get("data.ibex35.file").toString
 
+  // What to do when the Ibex35 is on the raise
+  val BULL_MARKET_DECISION = "SELL"
+
 }

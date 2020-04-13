@@ -1,10 +1,11 @@
-package spark
+package spark.v1
 
 import commons.{ProcessConstants, Report, TimeUtils}
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DoubleType, StringType, StructType}
+import spark.SparkUtils
 
 /**
   * This object showcases a statistical study of the relation between the weights of the sentiment analysis process

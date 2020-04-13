@@ -21,6 +21,7 @@ object SparkUtils {
       .config("spark.io.compression.codec", "snappy")
       .getOrCreate()
     logger.info("Spark Session created successfully")
+    spark.sparkContext.setLogLevel("WARN")
     spark
   }
 
