@@ -1,8 +1,7 @@
 package commons
 
 import com.gargoylesoftware.htmlunit.WebClient
-import com.gargoylesoftware.htmlunit.html.{DomNode, DomNodeList, HtmlDivision, HtmlPage}
-import org.apache.commons.collections.ListUtils
+import com.gargoylesoftware.htmlunit.html.{DomNode, HtmlPage}
 import org.joda.time.Days
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -19,8 +18,9 @@ object HistoricWebScraper extends App {
   val dateTimeFormat = DateTimeFormat.forPattern("yyyyMMdd")
 
   // Array of dates
-  val from = new DateTime(2020, 1, 1, 0, 0, 0, 0)
-  val until = new DateTime(2020, 1, 31, 0, 0, 0, 0)
+  val truncYear: Int => DateTime = n => new DateTime(n, 1, 1, 0, 0, 0, 0)
+  val from = truncYear(2018)
+  val until = truncYear(2019)
   val numberOfDays = Days.daysBetween(from, until).getDays
   val days: Seq[DateTime] = for (f <- 0 to numberOfDays) yield from.plusDays(f)
 
@@ -64,7 +64,9 @@ object HistoricWebScraper extends App {
       listOfNews
     }.toOption).flatten.distinct.map(x => x + "\n")
 
-    FileUtils.writeFile(path, result.toArray)
+    if(result.nonEmpty) {
+      FileUtils.writeFile(path, result.toArray)
+    }
   }
 }
 
