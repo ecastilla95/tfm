@@ -17,9 +17,13 @@ object FileUtils {
   /**
     * Same as above but for an array of strings as text
     */
-  def writeFile(path: String, fileName: String, text: Array[String]): Unit = {
-    val file = new File(path + fileName)
-    val bw = new BufferedWriter(new FileWriter(file))
+  def writeFile(path: String, fileName: String, text: Array[String]): Unit = writeFile(path + fileName, text)
+
+  /**
+   * Same as above but the path and file name are already concatenated
+   */
+  def writeFile(path: String, text: Array[String]): Unit = {
+    val bw = new BufferedWriter(new FileWriter(new File(path)))
     text.foreach(bw.write)
     bw.close()
   }
