@@ -19,8 +19,8 @@ object HistoricWebScraper extends App {
 
   // Array of dates
   val truncYear: Int => DateTime = n => new DateTime(n, 1, 1, 0, 0, 0, 0)
-  val from = truncYear(2017)
-  val until = truncYear(2018)
+  val from = truncYear(2015)
+  val until = truncYear(2016)
   val numberOfDays = Days.daysBetween(from, until).getDays
   val days: Seq[DateTime] = for (f <- 0 to numberOfDays) yield from.plusDays(f)
 
