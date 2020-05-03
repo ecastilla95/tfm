@@ -1,11 +1,12 @@
-package spark
+package spark.v1
 
 import java.io.File
 import java.text.SimpleDateFormat
 
 import commons.{FileUtils, ProcessConstants}
+import org.apache.spark.sql.functions.{max, min, when}
 import org.apache.spark.sql.types.{DoubleType, StringType, StructType}
-import org.apache.spark.sql.functions._
+import spark.{Ibex35, NormalisedWeights, SparkUtils}
 
 /**
   * After doing the sentiment analysis part in Python, we read the results we wrote as a dataframe
