@@ -16,7 +16,8 @@ import scala.util.{Failure, Success, Try}
 object ProcessInfo {
 
   // TODO: point this to the proper place and/or dinamically
-  private lazy val config = ConfigFactory.parseFile(new File("/home/osboxes/IdeaProjects/tfm/src/main/resources/application.conf"))
+  // private lazy val config = ConfigFactory.parseFile(new File("/home/osboxes/IdeaProjects/tfm/src/main/resources/application.conf"))
+  private lazy val config = ConfigFactory.parseFile(new File("D:\\Programación\\tfm\\src\\main\\resources\\application_win.conf"))
 
   // This is the map that stores the configuration values from the application.conf file
   // TODO: review how this works

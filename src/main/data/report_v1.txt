@@ -1,0 +1,58 @@
+----------------------------------------------------------------------------------------------------
+The value of the simple correlation is: -0.012857074625132187
+----------------------------------------------------------------------------------------------------
+The value of the complete correlation is: -0.012857074625132187
+----------------------------------------------------------------------------------------------------
+The value of the weekly correlation is: 0.055904258315329886
+----------------------------------------------------------------------------------------------------
+The correlation between one day's news sentiment rating and next days Ibex35 change is -0.08375955774873822
+----------------------------------------------------------------------------------------------------
+The correlation between one day's Ibex35 rating and next days news sentiment is 0.06411359744244062
+----------------------------------------------------------------------------------------------------
+The correlation between one day's news sentiment rating and the Ibex35 indicator in two days time is -0.030313223305869486
+----------------------------------------------------------------------------------------------------
+The correlation between one week's Ibex35 change and next weeks news sentiment rating is 0.4242741511569938
+----------------------------------------------------------------------------------------------------
+The correlation between one week's news sentiment rating and next weeks Ibex35 change is 0.09701766326072764
+----------------------------------------------------------------------------------------------------
+elmundo: The value of the correlation for the origin elmundo is: -0.024449894564325034
+----------------------------------------------------------------------------------------------------
+elmundo: The value of the weekly correlation for the origin elmundo is: 0.3067985963486926
+----------------------------------------------------------------------------------------------------
+elmundo: The correlation between one day's news sentiment rating and next days Ibex35 change for the origin elmundo is 0.012517978559351104
+----------------------------------------------------------------------------------------------------
+elmundo: The correlation between one day's Ibex35 rating and next days news sentiment for the origin elmundo is 0.05931184295728674
+----------------------------------------------------------------------------------------------------
+elmundo: The correlation between one day's news sentiment rating and the Ibex35 indicator in two days time for the origin elmundo is 0.04040966431717481
+----------------------------------------------------------------------------------------------------
+elmundo: The correlation between one week's Ibex35 change and next weeks news sentiment rating for the origin elmundo is 0.03420228456498376
+----------------------------------------------------------------------------------------------------
+elmundo: The correlation between one week's news sentiment rating and next weeks Ibex35 change for the origin elmundo is -0.2968145749768088
+----------------------------------------------------------------------------------------------------
+elpais: The value of the correlation for the origin elpais is: -0.1726457572954768
+----------------------------------------------------------------------------------------------------
+elpais: The value of the weekly correlation for the origin elpais is: -0.320556887620226
+----------------------------------------------------------------------------------------------------
+elpais: The correlation between one day's news sentiment rating and next days Ibex35 change for the origin elpais is -0.20126886089962867
+----------------------------------------------------------------------------------------------------
+elpais: The correlation between one day's Ibex35 rating and next days news sentiment for the origin elpais is 0.08730926160818932
+----------------------------------------------------------------------------------------------------
+elpais: The correlation between one day's news sentiment rating and the Ibex35 indicator in two days time for the origin elpais is -0.08225976626702938
+----------------------------------------------------------------------------------------------------
+elpais: The correlation between one week's Ibex35 change and next weeks news sentiment rating for the origin elpais is 0.5623213962093411
+----------------------------------------------------------------------------------------------------
+elpais: The correlation between one week's news sentiment rating and next weeks Ibex35 change for the origin elpais is 0.12323939146726692
+----------------------------------------------------------------------------------------------------
+expansion: The value of the correlation for the origin expansion is: 0.08796783280926111
+----------------------------------------------------------------------------------------------------
+expansion: The value of the weekly correlation for the origin expansion is: -0.03613202278035555
+----------------------------------------------------------------------------------------------------
+expansion: The correlation between one day's news sentiment rating and next days Ibex35 change for the origin expansion is -0.06629439798939606
+----------------------------------------------------------------------------------------------------
+expansion: The correlation between one day's Ibex35 rating and next days news sentiment for the origin expansion is 0.05214492949942387
+----------------------------------------------------------------------------------------------------
+expansion: The correlation between one day's news sentiment rating and the Ibex35 indicator in two days time for the origin expansion is -0.04539062544406735
+----------------------------------------------------------------------------------------------------
+expansion: The correlation between one week's Ibex35 change and next weeks news sentiment rating for the origin expansion is 0.26579739908148087
+----------------------------------------------------------------------------------------------------
+expansion: The correlation between one week's news sentiment rating and next weeks Ibex35 change for the origin expansion is 0.09570136640702986

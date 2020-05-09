@@ -24,7 +24,7 @@ object Charter extends App {
     .add("change", DoubleType, nullable = true)
 
   // We read the main dataframe with the provided schema
-  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf/", schema)
+  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf2020/", schema)
     .withColumn("date", to_date(col("date"), "yyyyMMdd"))
 
   val dailyDF = df.groupBy("date").agg(

@@ -13,6 +13,9 @@ import spark.SparkUtils
   */
 object Correlations extends App {
 
+  // TODO Windows only
+  System.setProperty("hadoop.home.dir", ProcessConstants.HADOOP_HOME)
+
   // Creation of a Spark session
   val spark = SparkUtils.createSparkSession("Correlations")
   import spark.sqlContext.implicits._
@@ -25,7 +28,7 @@ object Correlations extends App {
     .add("change", DoubleType, nullable = true)
 
   // We read the main dataframe
-  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf/", schema)
+  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf2020/", schema)
 
   /**
     * We are going to try calculating a series of metrics on our dataframe to study
@@ -140,7 +143,7 @@ object Correlations extends App {
 
   }
 
-  Seq("elmundo", "elpais", "expansion").foreach(reportCorrelationsFromOrigin)
+  Seq("elpais").foreach(reportCorrelationsFromOrigin)
 
   printReport()
 }
