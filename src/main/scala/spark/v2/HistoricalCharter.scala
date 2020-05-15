@@ -1,6 +1,6 @@
 package spark.v2
 
-import commons.{FileUtils, ProcessConstants, TimeUtils}
+import commons.ProcessConstants
 import commons.ProcessConstants.BULL_MARKET_DECISION
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DoubleType, StringType, StructType}
@@ -9,7 +9,7 @@ import spark.SparkUtils
 /**
   * This object creates small CSV files for later graphing
   */
-object Charter extends App {
+object HistoricalCharter extends App {
 
   // We create a Spark Session
   val spark = SparkUtils.createSparkSession("Correlations")
@@ -24,7 +24,7 @@ object Charter extends App {
     .add("change", DoubleType, nullable = true)
 
   // We read the main dataframe with the provided schema
-  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf/", schema)
+  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf2020/", schema)
     .withColumn("date", to_date(col("date"), "yyyyMMdd"))
 
   val dailyDF = df.groupBy("date").agg(
@@ -45,13 +45,13 @@ object Charter extends App {
         )
       )
 
-  sameDayPrediction.show()
-
   val sameDayPredictionAccuracy = {
     val correctPredictions = sameDayPrediction.where($"correct" === true).count()
     val totalPredictions = sameDayPrediction.count()
     correctPredictions.toDouble / totalPredictions
   }
+
+  sameDayPrediction.show()
 
   println("Basic same-day prediction accuracy: " + sameDayPredictionAccuracy)
 
@@ -79,6 +79,7 @@ object Charter extends App {
   }
 
   println("Basic next-day prediction accuracy: " + nextDayPredictionAccuracy)
+
   //////////////////////////////////////
   // Basic two-day prediction
   //////////////////////////////////////

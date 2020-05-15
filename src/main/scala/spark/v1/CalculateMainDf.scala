@@ -2,6 +2,7 @@ package spark.v1
 
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.Locale
 
 import commons.{FileUtils, ProcessConstants}
 import org.apache.spark.sql.functions.{max, min, when}
@@ -56,8 +57,9 @@ object CalculateMainDf extends App {
   }.as("news")
 
   // Date formats required to parse and format the date in the Ibex35 historical file
-  val entryFormat = new SimpleDateFormat("MMM dd, yyyy")
-  val exitFormat = new SimpleDateFormat("yyyyMMdd")
+  val locale = new Locale("en")
+  val entryFormat = new SimpleDateFormat("MMM dd, yyyy", locale)
+  val exitFormat = new SimpleDateFormat("yyyyMMdd", locale)
 
   // Reading from the local file system the historical file
   val ibex = SparkUtils.readCSV(spark, ProcessConstants.IBEX35_HISTORICAL_FILE)
