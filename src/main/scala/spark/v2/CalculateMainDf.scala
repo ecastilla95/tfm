@@ -65,7 +65,7 @@ object CalculateMainDf extends App {
   val exitFormat = new SimpleDateFormat("yyyyMMdd", locale)
 
   // Reading from the local file system the historical file
-  val ibex = SparkUtils.readCSV(spark, ProcessConstants.IBEX35_HISTORICAL_FILE)
+  val ibex = SparkUtils.readCSV(spark, ProcessConstants.IBEX35_HISTORICAL_NEW_FILE)
       .map{ row =>
         // We transform the date into the yyyyMMdd format
         val date = exitFormat.format(entryFormat.parse(row.getAs[String]("Date")))
@@ -81,13 +81,14 @@ object CalculateMainDf extends App {
       $"news.origin".as("origin"),
       $"news.weight".as("weight"),
       $"ibex.change".as("change")
-    ).coalesce(4)
+    ).coalesce(1)
 
   // We check the folder in the local file system where we are going to write our dataframe and delete its contents if needed
   val writeDir = new File(ProcessConstants.DATA_FOLDER + "mainDf2020\\")
   FileUtils.deleteRecursively(writeDir)
 
+  val path = "src\\main\\data\\mainDf2020"
   // We format the dataframe as a CSV file and save it as a text file
-  df.rdd.map(_.mkString(",").replaceAll("null", "")).saveAsTextFile("src\\main\\data\\mainDf2020")
+  df.write.format("csv").save(path)
 
 }
