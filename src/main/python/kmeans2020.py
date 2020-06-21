@@ -13,8 +13,8 @@ os.chdir(r'D:\Programación\tfm\src\main\data')
 
 df = pd.read_csv('mainDf2020.csv')
 df.columns = ['date', 'origin', 'weight', 'change']
+df['date'] = pd.to_datetime(df.date, format='%Y%m%d')
 df.index = df['date']
-df = df.drop(['date', 'origin'], axis=1).dropna()
 
 
 def cluster_elbow_method(df, top):

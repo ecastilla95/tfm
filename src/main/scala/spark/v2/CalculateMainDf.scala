@@ -2,11 +2,13 @@ package spark.v2
 
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.{Calendar, Locale}
 
 import commons.{FileUtils, ProcessConstants}
 import org.apache.spark.sql.functions.{max, min, when}
 import org.apache.spark.sql.types.{DoubleType, StringType, StructType}
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.{DateTime, Days}
 import spark.{Ibex35, NormalisedWeights, SparkUtils}
 
 /**
@@ -81,7 +83,23 @@ object CalculateMainDf extends App {
       $"news.origin".as("origin"),
       $"news.weight".as("weight"),
       $"ibex.change".as("change")
-    ).na.drop().coalesce(1)
+    ).coalesce(1)
+
+  // This adds all the posible dates
+  val dates = df.select(min($"date"), max($"date")).first()
+  val format = DateTimeFormat.forPattern("yyyyMMdd")
+  val minDate = format.parseDateTime(dates.getAs[String](0))
+  val maxDate = format.parseDateTime(dates.getAs[String](1))
+  val numberOfDays = Days.daysBetween(minDate, maxDate).getDays
+  val days: Seq[String] = for (f <- 0 to numberOfDays) yield format.print(minDate.plusDays(f))
+
+  val daysDf = spark.sparkContext.parallelize(days).toDF("date").as("days")
+
+  val finalDf = df.as("df").join(daysDf, $"df.date" === $"days.date", "full_outer")
+    .select($"days.date".as("date"), $"weight", $"change")
+    .na.fill(0.5, Seq("weight"))
+    .na.fill(0, Seq("change"))
+    .coalesce(1)
 
   // We check the folder in the local file system where we are going to write our dataframe and delete its contents if needed
   val writeDir = new File(ProcessConstants.DATA_FOLDER + "mainDf2020\\")
@@ -89,6 +107,7 @@ object CalculateMainDf extends App {
 
   val path = "src\\main\\data\\mainDf2020"
   // We format the dataframe as a CSV file and save it as a text file
-  df.write.format("csv").save(path)
+  // Use the variable df for raw data or use the variable finalDf for data filled with neutral values.
+  finalDf.write.format("csv").save(path)
 
 }
