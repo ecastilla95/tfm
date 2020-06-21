@@ -9,7 +9,8 @@ import org.apache.spark.sql.functions.{max, min, when}
 import org.apache.spark.sql.types.{DoubleType, StringType, StructType}
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.{DateTime, Days}
-import spark.{Ibex35, NormalisedWeights, SparkUtils}
+import spark.v1.NormalisedWeights
+import spark.{Ibex35, SparkUtils}
 
 /**
   * After doing the sentiment analysis part in Python, we read the results we wrote as a dataframe
@@ -48,7 +49,6 @@ object CalculateMainDf extends App {
   val news = data.map { row =>
 
     // We read the existing rows
-    val origin = "elpais"
     val name = row.getAs[String]("name")
     val weight = row.getAs[Double]("weight")
 
@@ -57,7 +57,7 @@ object CalculateMainDf extends App {
     // Calculation of the normalised weight for a given day
     val normalised = (weight - minWeight) / (maxWeight - minWeight)
 
-    NormalisedWeights(origin, date, normalised)
+    NormalisedWeights(date, normalised)
   }.as("news")
 
 
@@ -80,7 +80,6 @@ object CalculateMainDf extends App {
   val df = news.join(ibex, $"news.date" === $"ibex.date", "full_outer")
     .select(
       when($"news.date".isNotNull, $"news.date").otherwise($"ibex.date").as("date"),
-      $"news.origin".as("origin"),
       $"news.weight".as("weight"),
       $"ibex.change".as("change")
     ).coalesce(1)
@@ -102,12 +101,12 @@ object CalculateMainDf extends App {
     .coalesce(1)
 
   // We check the folder in the local file system where we are going to write our dataframe and delete its contents if needed
-  val writeDir = new File(ProcessConstants.DATA_FOLDER + "mainDf2020\\")
-  FileUtils.deleteRecursively(writeDir)
+  FileUtils.deleteRecursively(new File(ProcessConstants.DATA_FOLDER + "mainDf2020\\"))
+  FileUtils.deleteRecursively(new File(ProcessConstants.DATA_FOLDER + "mainDf2020_filled_na\\"))
 
-  val path = "src\\main\\data\\mainDf2020"
   // We format the dataframe as a CSV file and save it as a text file
-  // Use the variable df for raw data or use the variable finalDf for data filled with neutral values.
-  finalDf.write.format("csv").save(path)
+  // Use the path of df for raw data or use the path of finalDf for data filled with neutral values.
+  df.na.drop().write.format("csv").save("src\\main\\data\\mainDf2020")
+  finalDf.write.format("csv").save("src\\main\\data\\mainDf2020_filled_na")
 
 }

@@ -7,7 +7,7 @@ import java.util.Locale
 import commons.{FileUtils, ProcessConstants}
 import org.apache.spark.sql.functions.{max, min, when}
 import org.apache.spark.sql.types.{DoubleType, StringType, StructType}
-import spark.{Ibex35, NormalisedWeights, SparkUtils}
+import spark.{Ibex35, SparkUtils}
 
 /**
   * After doing the sentiment analysis part in Python, we read the results we wrote as a dataframe

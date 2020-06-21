@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -- coding: utf-8 --
 
 import os
 import pandas as pd
@@ -7,30 +7,45 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from pylab import rcParams
 import itertools
-import pickle
+from statsmodels.tsa.stattools import adfuller
 
 os.chdir(r'D:\Programación\tfm\src\main\data')
 
-# Read a df with columns 'date', 'origin', 'weight', 'change'
-df = pd.read_csv('mainDf2020.csv')
+df = pd.read_csv('mainDf2020_filled_na.csv',
+                 header=0,
+                 names=['date', 'weight', 'change'])
 
-# Weight is the sentiment score and change is the change in the Ibex 35 index.
-df.columns = ['date', 'origin', 'weight', 'change']
-df['date'] = pd.to_datetime(df['date'])
-
-df = df.set_index('date').dropna()
-
-serie = df['change']
+df['date'] = pd.to_datetime(df.date, format='%Y%m%d')
+df.index = df.date
+series = df.change
 
 rcParams['figure.figsize'] = 18, 8
 
-decomposition = sm.tsa.seasonal_decompose(serie, model='additive')
+serie2 = series.resample('W').mean()
+serie2.fillna(serie2.mean())
+serie2.fillna(serie2.mean(), inplace=True)
+
+decomposition = sm.tsa.seasonal_decompose(serie2, model='additive')
 fig = decomposition.plot()
 plt.show()
 
-p = d = q = range(0, 4)
+# =============================================================================
+# Check Stationarity
+# =============================================================================
+
+result = adfuller(serie2)
+print('ADF Statistic: %f' % result[0])
+print('p-value: %f' % result[1])
+print('Critical Values:')
+for key, value in result[4].items():
+    print('\t%s: %.3f' % (key, value))
+
+# La serie no tiene una raiz única, rechazamos H0 y la serie es ESTACIONARIA
+# no tiene una estructura dependiente del tiempo
+
+p = d = q = range(0, 3)
 pdq = list(itertools.product(p, d, q))
-seasonal_pdq = [(x[0], x[1], x[2], 6) for x in list(itertools.product(p, d, q))]
+seasonal_pdq = [(x[0], x[1], x[2], 7) for x in list(itertools.product(p, d, q))]
 
 '''
 Grid search para encontrar el mejor modelo arima.
@@ -39,7 +54,7 @@ bests = {}
 for param in pdq:
     for param_seasonal in seasonal_pdq:
         try:
-            mod = sm.tsa.statespace.SARIMAX(serie,
+            mod = sm.tsa.statespace.SARIMAX(serie2,
                                             order=param,
                                             seasonal_order=param_seasonal,
                                             enforce_stationarity=False,
@@ -53,15 +68,16 @@ for param in pdq:
             continue
 
 print(min(bests.items(), key=lambda x: x[1]))
+
 # =============================================================================
-# Mejor modelo con seasonality en 6 meses. (1,1,1)x(0,1,1)6 AIC : 2392.5135
-# (((0, 1, 3), (1, 1, 3, 6)) --> Mejor modelo con 3 periodos
+# Mejor modelo con seasonality en 7 dias.
+# (((0, 0, 2), (1, 1, 2, 7)) AIC : 189.016994
 # =============================================================================
-mod0 = sm.tsa.statespace.SARIMAX(serie,
-                                order=(1, 1, 1),
-                                seasonal_order=(0, 1, 1, 6),
-                                enforce_stationarity=False,
-                                enforce_invertibility=False)
+mod0 = sm.tsa.statespace.SARIMAX(serie2,
+                                 order=(0, 0, 2),
+                                 seasonal_order=(1, 1, 2, 7),
+                                 enforce_stationarity=False,
+                                 enforce_invertibility=False)
 
 results = mod0.fit()
 
@@ -70,105 +86,14 @@ print(results.summary().tables[1])
 results.plot_diagnostics(figsize=(16, 8))
 plt.show()
 
-#Veamos la prediccion
+# Veamos la prediccion
 
 pred = results.get_prediction()
-pred_ic = pred.conf_int()
-pred_ic['lower UNIDADES'][:'2018'] = serie[:'2018']
-pred_ic['upper UNIDADES'][:'2018'] = serie[:'2018']
-ax = serie.plot(label='Real')
-pred.predicted_mean['2019':].plot(
-        ax=ax, label='Prediccion a un periodo', alpha=.7, figsize=(14, 7))
 
-ax.fill_between(pred_ic.index,
-                pred_ic.iloc[:, 0],
-                pred_ic.iloc[:, 1], color='k', alpha=.2)
+fecha_ini = '2019-01'  # enero 2020
+y_pred = pred.predicted_mean[fecha_ini:].to_frame('pred')
+y_pred['real'] = serie2
+y_pred['error'] = (y_pred.real - y_pred.pred)
 
-ax.set_ylabel('Unidades')
-plt.legend()
-
-plt.show()
-
-y_pred = pred.predicted_mean['2019':]
-y_v = serie['2019':]
-
-mse = ((y_pred - y_v) ** 2).mean()
-print('El error cuadrático medio de la predicción es: {}'.format(round(mse, 2)))
-print('Y su raiz cuadrada es {}'.format(round(np.sqrt(mse), 2)))
-# =============================================================================
-# Mejor modelo con seasonality en 12 meses. (1,1,2)x(0,2,2)12 AIC : 
-# =============================================================================
-mod = sm.tsa.statespace.SARIMAX(serie,
-                                order=(1, 1, 2),
-                                seasonal_order=(0, 2, 2, 12),
-                                enforce_stationarity=False,
-                                enforce_invertibility=False)
-
-results = mod.fit()
-
-print(results.summary().tables[1])
-
-results.plot_diagnostics(figsize=(16, 8))
-plt.show()
-
-#Veamos la prediccion
-
-pred = results.get_prediction()
-pred_ic = pred.conf_int()
-pred_ic['lower UNIDADES'][:'2018'] = serie[:'2018']
-pred_ic['upper UNIDADES'][:'2018'] = serie[:'2018']
-ax = serie.plot(label='Real')
-pred.predicted_mean['2019':].plot(
-        ax=ax, label='Prediccion a un periodo', alpha=.7, figsize=(14, 7))
-
-ax.fill_between(pred_ic.index,
-                pred_ic.iloc[:, 0],
-                pred_ic.iloc[:, 1], color='k', alpha=.2)
-
-ax.set_ylabel('Unidades')
-plt.legend()
-
-plt.show()
-
-y_pred = pred.predicted_mean['2019':]
-y_v = serie['2019':]
-
-mse = ((y_pred - y_v) ** 2).mean()
-print('El error cuadrático medio de la predicción es: {}'.format(round(mse, 2)))
-print('Y su raiz cuadrada es {}'.format(round(np.sqrt(mse), 2)))
-
-# =============================================================================
-# El mejor modelo tiene seasonality 6 porque las compras aumentan en verano e
-# invierno debido a las rebajas aunque presente un AIC más bajo es bastante más
-# preciso que el modelo con seasonality 12. Utilizamos este para mostrar predicciones
-# =============================================================================
-
-pred_uc = results.get_forecast(steps=25)
-pred_ic = pred_uc.conf_int()
-
-ax = serie.plot(label='Real', figsize=(14, 7))
-pred_uc.predicted_mean.plot(ax=ax, label='Forecast')
-ax.fill_between(pred_ic.index,
-                pred_ic.iloc[:, 0],
-                pred_ic.iloc[:, 1], color='k', alpha=.25)
-ax.set_xlabel('Fecha')
-ax.set_ylabel('Unidades')
-
-plt.legend()
-plt.show()
-
-# =============================================================================
-# Ajuste natalidad con (((0, 1, 3), (1, 1, 3, 6))
-# =============================================================================
-
-mod = sm.tsa.statespace.SARIMAX(serie,
-                                order=(0, 1, 3),
-                                seasonal_order=(1, 1, 3, 6),
-                                enforce_stationarity=False,
-                                enforce_invertibility=False)
-
-results = mod.fit()
-
-prediction = results.get_forecast(18).predicted_mean
-df_natalidad = serie.append(prediction)
-df_natalidad.to_csv('nat.csv', sep=';')
+print('El error cuadrático medio de la predicción es: {}'.format(round(y_pred.mse.mean(), 2)))
+print('Y su raiz cuadrada es {}'.format(round(np.sqrt(y_pred.mse.mean()), 2)))

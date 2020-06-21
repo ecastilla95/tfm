@@ -19,12 +19,11 @@ object Charter extends App {
   // This is the schema of the data in the main dataframe
   val schema = new StructType()
     .add("date", StringType, nullable = true)
-    .add("origin", StringType, nullable = true)
     .add("weight", DoubleType, nullable = true)
     .add("change", DoubleType, nullable = true)
 
   // We read the main dataframe with the provided schema
-  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf/", schema)
+  val df = SparkUtils.readCSVWithSchema(spark, ProcessConstants.DATA_FOLDER + "mainDf2020_filled_na/", schema)
     .withColumn("date", to_date(col("date"), "yyyyMMdd"))
 
   val dailyDF = df.groupBy("date").agg(
@@ -104,16 +103,5 @@ object Charter extends App {
   }
 
   println("Basic two-day prediction accuracy: " + twoDayPredictionAccuracy)
-
-  //  // Function to filter the main dataframe by origin
-//  def filter(origin: String): DataFrame = df.filter(($"origin" === lit(origin)) or $"origin".isNull)
-//
-//  // The correlation between one week's Ibex35 change and next weeks news sentiment rating is 0.4242741511569938
-//  val nextDay = df.as("_1").join(df.as("_2"), $"_1.date" === ($"_2.date" + 1))
-//    .select(
-//      concat($"_2.week", lit("-"), $"_1.week").as("weeks"),
-//      $"_1.avg(weight)".as("next_weeks_weight"),
-//      $"_2.avg(change)".as("change")
-//    )
 
 }
