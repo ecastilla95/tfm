@@ -81,7 +81,7 @@ object CalculateMainDf extends App {
       $"news.origin".as("origin"),
       $"news.weight".as("weight"),
       $"ibex.change".as("change")
-    ).coalesce(1)
+    ).na.drop().coalesce(1)
 
   // We check the folder in the local file system where we are going to write our dataframe and delete its contents if needed
   val writeDir = new File(ProcessConstants.DATA_FOLDER + "mainDf2020\\")
